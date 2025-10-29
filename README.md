@@ -166,3 +166,5 @@ plt.show()
 
 ## **Gráfica de la evolución de las frecuencias por contracción**
 <img width="887" height="550" alt="image" src="https://github.com/user-attachments/assets/60f6c1ad-4de4-4d3d-9700-6e877bcfe5e7" />
+
+## **Análisis de la variación de las frecuencias a lo largo de las contracciones simuladas**
