@@ -312,9 +312,10 @@ plt.show()
 
 ## **Gráfica de la señal EMG con frecuencia media y mediana**
 <img width="881" height="456" alt="image" src="https://github.com/user-attachments/assets/18fae2ff-c06c-4053-967d-6b36c8b99240" />
+
 ## **Resultados**
 
-
+## **Análisis de la variación de las frecuencias a lo largo de las contracciones**
 
 
 
