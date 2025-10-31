@@ -168,3 +168,14 @@ plt.show()
 <img width="887" height="550" alt="image" src="https://github.com/user-attachments/assets/60f6c1ad-4de4-4d3d-9700-6e877bcfe5e7" />
 
 ## **Análisis de la variación de las frecuencias a lo largo de las contracciones simuladas**
+Durante el análisis de la señal electromiográfica (EMG), que se segmentó en cinco contracciones, se calcularon las frecuencias media y mediana del espectro de potencia de cada segmento. Estos parámetros son clave para evaluar cómo cambia el contenido frecuencial de la señal a lo largo del tiempo y pueden estar relacionados con cambios fisiológicos, como la activación muscular o la aparición de fatiga.
+
+En primer lugar, se observa que la frecuencia media muestra un ligero aumento a medida que avanzan las contracciones, pasando de aproximadamente 155.8 Hz en la primera contracción a 160 Hz en la última. Este incremento representa una variación cercana al 3%, lo que sugiere una leve tendencia hacia un mayor contenido de alta frecuencia en las últimas contracciones.
+
+Por otro lado, la frecuencia mediana se mantiene casi constante, con valores que oscilan entre 118 y 122 Hz. Esto indica que la distribución de la energía espectral de la señal se mantiene estable entre las diferentes contracciones, sin cambios significativos en la forma del espectro de potencia.
+
+El hecho de que la frecuencia media sea mas alta a la frecuencia mediana en todas las contracciones es un comportamiento habitual en las señales EMG. Esto se debe a que el espectro electromiográfico suele presentar una asimetría hacia frecuencias altas, donde existen componentes de menor amplitud pero suficiente energía para elevar el valor medio.
+
+En cuanto al análisis general de la tendencia, la estabilidad de la frecuencia mediana y el ligero aumento de la media sugieren que no hay signos de fatiga muscular en las contracciones analizadas. Normalmente, en presencia de fatiga, se esperaría una disminución progresiva de la frecuencia mediana, asociada a una reducción en la velocidad de conducción de las fibras musculares y a un desplazamiento del espectro hacia frecuencias más bajas.
+
+Por el contrario, los resultados obtenidos reflejan un comportamiento estable de la señal, con un perfil espectral similar entre todas las contracciones. Esto puede interpretarse como una señal que proviene de contracciones controladas ya que corresponde a una señal simulada, además de que cuenta con una activación muscular constante o incluso ligeramente creciente, lo que se refleja en el leve aumento de la frecuencia media.
