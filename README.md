@@ -69,10 +69,9 @@ plt.show()
 ## **Gráfica de la señal EMG simulada filtrada**
 <img width="1068" height="493" alt="image" src="https://github.com/user-attachments/assets/3808bbcc-fb43-464f-82c5-b99c9b622088" />
 
-## **Segmentación de la señal**
-
 ## **Código en Python (Google colab)**
 <pre> ```
+# Segmentación de la señal
 # Dividir en 5 segmentos iguales, lo que corresponderia 5 contracciones simuladas
 n = len(voltaje)
 segmentos = np.array_split(voltaje, 5)
@@ -93,10 +92,9 @@ plt.show()
 ## **Señal segmentada (5 contracciones simuladas)**
 <img width="963" height="613" alt="image" src="https://github.com/user-attachments/assets/16a4eb6c-d626-49ef-8757-5955661974bb" />
 
-## **Frecuencia media y mediana de cada segmento**
-
 ## **Código en Python (Google colab)**
 <pre> ```
+# Frecuencia media y mediana de cada segmento
 def filtrar_pasaaltos(x, fs, fc=20):
 b, a = butter(4, fc/(fs/2), btype='high')
 return filtfilt(b, a, x)
@@ -179,3 +177,144 @@ El hecho de que la frecuencia media sea mas alta a la frecuencia mediana en toda
 En cuanto al análisis general de la tendencia, la estabilidad de la frecuencia mediana y el ligero aumento de la media sugieren que no hay signos de fatiga muscular en las contracciones analizadas. Normalmente, en presencia de fatiga, se esperaría una disminución progresiva de la frecuencia mediana, asociada a una reducción en la velocidad de conducción de las fibras musculares y a un desplazamiento del espectro hacia frecuencias más bajas.
 
 Por el contrario, los resultados obtenidos reflejan un comportamiento estable de la señal, con un perfil espectral similar entre todas las contracciones. Esto puede interpretarse como una señal que proviene de contracciones controladas ya que corresponde a una señal simulada, además de que cuenta con una activación muscular constante o incluso ligeramente creciente, lo que se refleja en el leve aumento de la frecuencia media.
+
+# **Parte B**
+
+## **Código en Python (Google colab)**
+<pre> ´´´
+# Importación de las librerias a utilizar
+from google.colab import files
+import numpy as np
+import pandas as pd
+from scipy.fft import fft, fftfreq
+from scipy.signal import butter, filtfilt
+import matplotlib.pyplot as plt
+  
+# Cargar los archivos desde el computador
+uploaded = files.upload()
+voltaje = np.loadtxt("EMG_señal.txt")
+
+# Definir parámetros de muestreo
+fs = 1500
+N = len(voltaje)
+t = np.arange(N) / fs  # eje de tiempo
+
+# Graficar
+plt.figure(figsize=(10,4))
+plt.plot(t, voltaje, label="Señal EOG, tomada en el laboratorio")
+plt.xlabel("Tiempo [s]")
+plt.ylabel("Voltaje [V]")
+plt.title("Señal EMG tomada en el laboratorio ")
+plt.grid(True)
+plt.show()
+  ´´´
+</pre>
+## **Diagrama de flujo**
+
+## **Gráfica de la señal EMG tomada en el laboratorio**
+<img width="859" height="394" alt="image" src="https://github.com/user-attachments/assets/f96ac8da-ef4c-47c7-ac68-245e0dbbbb92" />
+
+## **Código en Python (Google colab)**
+<pre> ´´´
+# Filtrado
+# Parámetros del filtro
+fs = 1500       
+lowcut = 20.0   # Límite inferior (Hz)
+highcut = 450.0 # Límite superior (Hz)
+order = 4       # Orden del filtro
+
+# Funciones del filtro
+def butter_bandpass(lowcut, highcut, fs, order=4):
+nyq = 0.5 * fs
+low = lowcut / nyq
+high = highcut / nyq
+b, a = butter(order, [low, high], btype='band')
+return b, a
+
+def bandpass_filter(data, lowcut, highcut, fs, order=4):
+b, a = butter_bandpass(lowcut, highcut, fs, order)
+y = filtfilt(b, a, data)
+return y
+
+# Aplicar el filtro
+voltaje_filt = bandpass_filter(voltaje, lowcut, highcut, fs, order)
+
+# Definir segmento para ampliar (primeros 15 segundos)
+t_zoom = t[t <= 15]
+voltaje_zoom = voltaje_filt[:len(t_zoom)]
+
+# Graficar
+plt.figure(figsize=(12,6))
+plt.subplot(2,1,2)
+plt.plot(t_zoom, voltaje_zoom, color='orange')
+plt.title("Señal EMG filtrada (pasa banda 20–450 Hz) — Zoom en primeros 15 s")
+plt.xlabel("Tiempo [s]")
+plt.ylabel("Voltaje [V]")
+plt.grid(True)
+plt.show()
+  ´´´
+</pre>
+## **Diagrama de flujo**
+
+## **Gráfica de la señal EMG tomada en el laboratorio con filtro pasa banda**
+<img width="1219" height="306" alt="image" src="https://github.com/user-attachments/assets/00db37fc-35c6-4591-9cba-7c5cf6a5da18" />
+
+## **Código en Python (Google colab)**
+<pre> ´´´
+# Frecuencia media y mediana
+# --- 1. Duración de cada ventana de contracción ---
+ventana = 0.08  # segundos (80 ms)
+muestras_ventana = int(ventana * fs / 2)  # mitad antes y mitad después
+
+frecuencia_media = []
+frecuencia_mediana = []
+indices_contracciones = []
+
+# --- 2. Calcular frecuencia media y mediana para cada contracción detectada ---
+for p in peaks:
+    ini = max(0, p - muestras_ventana)
+    fin = min(len(voltaje_filt), p + muestras_ventana)
+    segmento = voltaje_filt[ini:fin]
+
+    # Evitar análisis de ventanas vacías
+    if len(segmento) < 10:
+        continue
+
+    # --- 3. Espectro de potencia mediante Welch ---
+    f, Pxx = welch(segmento, fs=fs, nperseg=min(256, len(segmento)))
+
+    # --- 4. Calcular frecuencia media y mediana ---
+    f_media = np.sum(f * Pxx) / np.sum(Pxx)
+    f_acum = np.cumsum(Pxx)
+    f_mediana = f[np.where(f_acum >= np.sum(Pxx)/2)[0][0]]
+
+    frecuencia_media.append(f_media)
+    frecuencia_mediana.append(f_mediana)
+    indices_contracciones.append(p / fs)  # tiempo en segundos de la contracción
+
+# --- 5. Mostrar resultados numéricos ---
+for i, (fm, fmed) in enumerate(zip(frecuencia_media, frecuencia_mediana)):
+    print(f"Contracción {i+1}: Frecuencia media = {fm:.2f} Hz, Frecuencia mediana = {fmed:.2f} Hz")
+
+# --- 6. Graficar evolución de las frecuencias ---
+plt.figure(figsize=(10,5))
+plt.plot(indices_contracciones, frecuencia_media, 'o-', label='Frecuencia media')
+plt.plot(indices_contracciones, frecuencia_mediana, 's--', label='Frecuencia mediana')
+plt.title("Evolución de la frecuencia media y mediana durante las contracciones")
+plt.xlabel("Tiempo de contracción [s]")
+plt.ylabel("Frecuencia [Hz]")
+plt.legend()
+plt.grid(True)
+plt.show()
+  ´´´
+</pre>
+## **Diagrama de flujo**
+
+## **Gráfica de la señal EMG con frecuencia media y mediana**
+<img width="881" height="456" alt="image" src="https://github.com/user-attachments/assets/18fae2ff-c06c-4053-967d-6b36c8b99240" />
+## **Resultados**
+
+
+
+
+
