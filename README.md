@@ -31,7 +31,7 @@ import matplotlib.pyplot as plt
   
 # Cargar los archivos desde el computador
 uploaded = files.upload()
-voltaje = np.loadtxt("EMG_señal.txt")
+voltaje = np.loadtxt("EMG_simulada.txt")
   
 # Definir parámetros de muestreo
 fs = 1500
@@ -40,7 +40,7 @@ t = np.arange(N) / fs  # eje de tiempo
 
 # Graficar la señal sin filtar
 plt.figure(figsize=(10,4))
-plt.plot(t, voltaje, label="Señal EOG, tomada en el laboratorio")
+plt.plot(t, voltaje, label="Señal EMG simulada")
 plt.xlabel("Tiempo [s]")
 plt.ylabel("Voltaje [V]")
 plt.title("Señal EMG simulada")
@@ -79,7 +79,7 @@ segmentos = np.array_split(voltaje, 5)
 # Graficar cada contracción segmentada
 plt.figure(figsize=(10,6))
 for i, seg in enumerate(segmentos):
-    plt.plot(seg + i*0.5, label=f'Contracción {i+1}')  # se separan para verlas mejor
+plt.plot(seg + i*0.5, label=f'Contracción {i+1}')  # se separan para verlas mejor
 plt.title("Segmentación de las 5 contracciones simuladas")
 plt.xlabel("Muestras")
 plt.ylabel("Amplitud (V) + desplazamiento")
@@ -192,7 +192,7 @@ import matplotlib.pyplot as plt
   
 # Cargar los archivos desde el computador
 uploaded = files.upload()
-voltaje = np.loadtxt("EMG_señal.txt")
+voltaje = np.loadtxt("EMG_real.txt")
 
 # Definir parámetros de muestreo
 fs = 1500
@@ -201,7 +201,7 @@ t = np.arange(N) / fs  # eje de tiempo
 
 # Graficar
 plt.figure(figsize=(10,4))
-plt.plot(t, voltaje, label="Señal EOG, tomada en el laboratorio")
+plt.plot(t, voltaje, label="Señal EMG real")
 plt.xlabel("Tiempo [s]")
 plt.ylabel("Voltaje [V]")
 plt.title("Señal EMG tomada en el laboratorio ")
