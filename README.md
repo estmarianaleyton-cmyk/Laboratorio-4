@@ -761,7 +761,60 @@ plt.show()
 ## **Código en Python (Google colab)**
 <pre> ```
 # Comparacion del espectro de las primeras y ultimas contracciones
+# Definir grupos para comparación
+n_total = len(peaks)
+n_mitad = n_total // 2
+primeras = peaks[:n_mitad]
+ultimas = peaks[n_mitad:]
 
+# Función para calcular FFT promedio de un grupo 
+def fft_promedio(peaks_grupo):
+espectros = []
+for p in peaks_grupo:
+ini = max(0, p - muestras_ventana)
+fin = min(len(voltaje_filt), p + muestras_ventana)
+segmento = voltaje_filt[ini:fin]
+N = len(segmento)
+fft_vals = np.fft.fft(segmento)
+fft_freqs = np.fft.fftfreq(N, d=1/fs)
+pos_mask = fft_freqs > 0
+freqs = fft_freqs[pos_mask]
+mag = np.abs(fft_vals[pos_mask]) * 2 / N
+espectros.append(mag)
+
+# Promedio espectral del grupo
+espectros = np.array(espectros)
+mag_prom = np.mean(espectros, axis=0)
+return freqs, mag_prom
+
+# FFT promedio de primeras y últimas contracciones
+freqs, mag_primeras = fft_promedio(primeras)
+mag_ultimas = fft_promedio(ultimas)
+
+# Graficar comparación
+plt.figure(figsize=(10,6))
+plt.plot(freqs, mag_primeras, label='Primeras contracciones', color='blue')
+plt.plot(freqs, mag_ultimas, label='Últimas contracciones', color='red')
+plt.title("Comparación de espectros EMG: primeras vs últimas contracciones")
+plt.xlabel("Frecuencia [Hz]")
+plt.ylabel("Magnitud promedio (uV)")
+plt.xlim(0, 500)
+plt.legend()
+plt.grid(True)
+plt.show()
+
+# Análisis numérico de la reducción en altas frecuencias
+rango_alta = (freqs >= 100) & (freqs <= 250)
+energia_primeras = np.sum(mag_primeras[rango_alta])
+energia_ultimas = np.sum(mag_ultimas[rango_alta])
+reduccion = ((energia_primeras - energia_ultimas) / energia_primeras) * 100
+print(f"Reducción del contenido de alta frecuencia: {reduccion:.2f}%")
   ```
 </pre>
+*Reducción en altas frecuencias: -19.03%*
+## **Gráfica de comparación de espectros**
+<img width="964" height="614" alt="image" src="https://github.com/user-attachments/assets/8932ed0a-0b6a-436a-9fca-5268ff0d1194" />
+
+
+
 
