@@ -61,8 +61,6 @@ plt.legend()
 plt.show()
 ```
 </pre>
-## **Diagrama de flujo**
-
 ## **Gráfica de la señal EMG simulada**
 <img width="1073" height="494" alt="image" src="https://github.com/user-attachments/assets/1479fac0-cc57-4f4e-b37c-b8864b5b2397" />
 
@@ -165,7 +163,7 @@ plt.show()
 ## **Gráfica de la evolución de las frecuencias por contracción**
 <img width="887" height="550" alt="image" src="https://github.com/user-attachments/assets/60f6c1ad-4de4-4d3d-9700-6e877bcfe5e7" />
 
-## **Análisis de la variación de las frecuencias a lo largo de las contracciones simuladas**
+## **Análisis de la variación de las frecuencias a lo largo de las contracciones simuladas:**
 Durante el análisis de la señal electromiográfica (EMG), que se segmentó en cinco contracciones, se calcularon las frecuencias media y mediana del espectro de potencia de cada segmento. Estos parámetros son clave para evaluar cómo cambia el contenido frecuencial de la señal a lo largo del tiempo y pueden estar relacionados con cambios fisiológicos, como la activación muscular o la aparición de fatiga.
 
 En primer lugar, se observa que la frecuencia media muestra un ligero aumento a medida que avanzan las contracciones, pasando de aproximadamente 155.8 Hz en la primera contracción a 160 Hz en la última. Este incremento representa una variación cercana al 3%, lo que sugiere una leve tendencia hacia un mayor contenido de alta frecuencia en las últimas contracciones.
@@ -209,8 +207,6 @@ plt.grid(True)
 plt.show()
   ´´´
 </pre>
-## **Diagrama de flujo**
-
 ## **Gráfica de la señal EMG tomada en el laboratorio**
 <img width="859" height="394" alt="image" src="https://github.com/user-attachments/assets/f96ac8da-ef4c-47c7-ac68-245e0dbbbb92" />
 
@@ -262,7 +258,7 @@ plt.show()
 ## **Código en Python (Google colab)**
 <pre> ´´´
 # Frecuencia media y mediana
-# --- 1. Duración de cada ventana de contracción ---
+# Duración de cada ventana de contracción
 ventana = 0.08  # segundos (80 ms)
 muestras_ventana = int(ventana * fs / 2)  # mitad antes y mitad después
 
@@ -270,33 +266,30 @@ frecuencia_media = []
 frecuencia_mediana = []
 indices_contracciones = []
 
-# --- 2. Calcular frecuencia media y mediana para cada contracción detectada ---
+# Calculo de la frecuencia media y mediana para cada contracción
 for p in peaks:
-    ini = max(0, p - muestras_ventana)
-    fin = min(len(voltaje_filt), p + muestras_ventana)
-    segmento = voltaje_filt[ini:fin]
+ini = max(0, p - muestras_ventana)
+fin = min(len(voltaje_filt), p + muestras_ventana)
+segmento = voltaje_filt[ini:fin]
+f_media = np.sum(f * Pxx) / np.sum(Pxx)
+f_acum = np.cumsum(Pxx)
+f_mediana = f[np.where(f_acum >= np.sum(Pxx)/2)[0][0]]
+frecuencia_media.append(f_media)
+frecuencia_mediana.append(f_mediana)
+indices_contracciones.append(p / fs)  # tiempo en segundos de la contracción
 
-    # Evitar análisis de ventanas vacías
-    if len(segmento) < 10:
-        continue
+# Evitar análisis de ventanas vacías
+if len(segmento) < 10:
+continue
 
-    # --- 3. Espectro de potencia mediante Welch ---
-    f, Pxx = welch(segmento, fs=fs, nperseg=min(256, len(segmento)))
+# Espectro de potencia mediante Welch
+f, Pxx = welch(segmento, fs=fs, nperseg=min(256, len(segmento)))
 
-    # --- 4. Calcular frecuencia media y mediana ---
-    f_media = np.sum(f * Pxx) / np.sum(Pxx)
-    f_acum = np.cumsum(Pxx)
-    f_mediana = f[np.where(f_acum >= np.sum(Pxx)/2)[0][0]]
-
-    frecuencia_media.append(f_media)
-    frecuencia_mediana.append(f_mediana)
-    indices_contracciones.append(p / fs)  # tiempo en segundos de la contracción
-
-# --- 5. Mostrar resultados numéricos ---
+# Mostrar los resultados
 for i, (fm, fmed) in enumerate(zip(frecuencia_media, frecuencia_mediana)):
-    print(f"Contracción {i+1}: Frecuencia media = {fm:.2f} Hz, Frecuencia mediana = {fmed:.2f} Hz")
+print(f"Contracción {i+1}: Frecuencia media = {fm:.2f} Hz, Frecuencia mediana = {fmed:.2f} Hz")
 
-# --- 6. Graficar evolución de las frecuencias ---
+# Graficar evolución de las frecuencias
 plt.figure(figsize=(10,5))
 plt.plot(indices_contracciones, frecuencia_media, 'o-', label='Frecuencia media')
 plt.plot(indices_contracciones, frecuencia_mediana, 's--', label='Frecuencia mediana')
@@ -310,12 +303,465 @@ plt.show()
 </pre>
 ## **Diagrama de flujo**
 
+## **Resultados**
+
+Contracción 1: Frecuencia media = 38.97 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 2: Frecuencia media = 39.25 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 3: Frecuencia media = 42.30 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 4: Frecuencia media = 49.70 Hz, Frecuencia mediana = 50.00 Hz
+
+Contracción 5: Frecuencia media = 34.33 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 6: Frecuencia media = 43.97 Hz, Frecuencia mediana = 50.00 Hz
+
+Contracción 7: Frecuencia media = 38.37 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 8: Frecuencia media = 43.12 Hz, Frecuencia mediana = 50.00 Hz
+
+Contracción 9: Frecuencia media = 44.71 Hz, Frecuencia mediana = 50.00 Hz
+
+Contracción 10: Frecuencia media = 38.42 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 11: Frecuencia media = 39.37 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 12: Frecuencia media = 34.56 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 13: Frecuencia media = 39.22 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 14: Frecuencia media = 37.06 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 15: Frecuencia media = 44.14 Hz, Frecuencia mediana = 50.00 Hz
+
+Contracción 16: Frecuencia media = 35.29 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 17: Frecuencia media = 38.24 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 18: Frecuencia media = 46.50 Hz, Frecuencia mediana = 50.00 Hz
+
+Contracción 19: Frecuencia media = 41.58 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 20: Frecuencia media = 44.90 Hz, Frecuencia mediana = 50.00 Hz
+
+Contracción 21: Frecuencia media = 45.11 Hz, Frecuencia mediana = 50.00 Hz
+
+Contracción 22: Frecuencia media = 35.00 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 23: Frecuencia media = 43.66 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 24: Frecuencia media = 31.41 Hz, Frecuencia mediana = 25.00 Hz
+
+Contracción 25: Frecuencia media = 42.63 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 26: Frecuencia media = 33.23 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 27: Frecuencia media = 39.44 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 28: Frecuencia media = 38.34 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 29: Frecuencia media = 40.67 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 30: Frecuencia media = 33.06 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 31: Frecuencia media = 36.87 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 32: Frecuencia media = 45.90 Hz, Frecuencia mediana = 50.00 Hz
+
+Contracción 33: Frecuencia media = 37.10 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 34: Frecuencia media = 40.12 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 35: Frecuencia media = 43.49 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 36: Frecuencia media = 27.71 Hz, Frecuencia mediana = 25.00 Hz
+
+Contracción 37: Frecuencia media = 37.44 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 38: Frecuencia media = 44.01 Hz, Frecuencia mediana = 50.00 Hz
+
+Contracción 39: Frecuencia media = 39.92 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 40: Frecuencia media = 40.85 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 41: Frecuencia media = 41.22 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 42: Frecuencia media = 38.31 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 43: Frecuencia media = 45.55 Hz, Frecuencia mediana = 50.00 Hz
+
+Contracción 44: Frecuencia media = 39.23 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 45: Frecuencia media = 30.79 Hz, Frecuencia mediana = 25.00 Hz
+
+Contracción 46: Frecuencia media = 37.06 Hz, Frecuencia mediana = 25.00 Hz
+
+Contracción 47: Frecuencia media = 41.76 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 48: Frecuencia media = 31.03 Hz, Frecuencia mediana = 25.00 Hz
+
+Contracción 49: Frecuencia media = 37.24 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 50: Frecuencia media = 33.85 Hz, Frecuencia mediana = 25.00 Hz
+
+Contracción 51: Frecuencia media = 44.44 Hz, Frecuencia mediana = 50.00 Hz
+
+Contracción 52: Frecuencia media = 34.37 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 53: Frecuencia media = 32.73 Hz, Frecuencia mediana = 25.00 Hz
+
+Contracción 54: Frecuencia media = 40.24 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 55: Frecuencia media = 36.78 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 56: Frecuencia media = 40.20 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 57: Frecuencia media = 32.15 Hz, Frecuencia mediana = 25.00 Hz
+
+Contracción 58: Frecuencia media = 43.63 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 59: Frecuencia media = 33.20 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 60: Frecuencia media = 37.38 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 61: Frecuencia media = 33.16 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 62: Frecuencia media = 31.29 Hz, Frecuencia mediana = 25.00 Hz
+
+Contracción 63: Frecuencia media = 33.31 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 64: Frecuencia media = 46.31 Hz, Frecuencia mediana = 50.00 Hz
+
+Contracción 65: Frecuencia media = 39.12 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 66: Frecuencia media = 38.64 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 67: Frecuencia media = 38.29 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 68: Frecuencia media = 44.88 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 69: Frecuencia media = 34.19 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 70: Frecuencia media = 42.74 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 71: Frecuencia media = 38.13 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 72: Frecuencia media = 38.30 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 73: Frecuencia media = 29.18 Hz, Frecuencia mediana = 25.00 Hz
+
+Contracción 75: Frecuencia media = 43.57 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 76: Frecuencia media = 43.65 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 77: Frecuencia media = 31.79 Hz, Frecuencia mediana = 25.00 Hz
+
+Contracción 78: Frecuencia media = 33.98 Hz, Frecuencia mediana = 25.00 Hz
+
+Contracción 79: Frecuencia media = 40.68 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 80: Frecuencia media = 41.68 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 81: Frecuencia media = 39.57 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 82: Frecuencia media = 43.17 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 83: Frecuencia media = 34.13 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 84: Frecuencia media = 45.34 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 85: Frecuencia media = 47.17 Hz, Frecuencia mediana = 50.00 Hz
+
+Contracción 86: Frecuencia media = 36.59 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 87: Frecuencia media = 43.09 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 88: Frecuencia media = 37.78 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 89: Frecuencia media = 39.22 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 90: Frecuencia media = 30.88 Hz, Frecuencia mediana = 25.00 Hz
+
+Contracción 91: Frecuencia media = 34.85 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 92: Frecuencia media = 46.06 Hz, Frecuencia mediana = 50.00 Hz
+
+Contracción 93: Frecuencia media = 48.93 Hz, Frecuencia mediana = 50.00 Hz
+
+Contracción 94: Frecuencia media = 48.55 Hz, Frecuencia mediana = 50.00 Hz
+
+Contracción 95: Frecuencia media = 35.92 Hz, Frecuencia mediana = 25.00 Hz
+
+Contracción 96: Frecuencia media = 39.86 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 97: Frecuencia media = 42.32 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 98: Frecuencia media = 41.07 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 99: Frecuencia media = 41.59 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 100: Frecuencia media = 34.01 Hz, Frecuencia mediana = 25.00 Hz
+
+Contracción 101: Frecuencia media = 32.07 Hz, Frecuencia mediana = 25.00 Hz
+
+Contracción 102: Frecuencia media = 38.13 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 103: Frecuencia media = 42.86 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 104: Frecuencia media = 45.43 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 105: Frecuencia media = 34.29 Hz, Frecuencia mediana = 25.00 Hz
+
+Contracción 106: Frecuencia media = 36.19 Hz, Frecuencia mediana = 25.00 Hz
+
+Contracción 107: Frecuencia media = 39.45 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 108: Frecuencia media = 32.88 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 109: Frecuencia media = 35.83 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 110: Frecuencia media = 38.37 Hz, Frecuencia mediana = 25.00 Hz
+
+Contracción 111: Frecuencia media = 41.82 Hz, Frecuencia mediana = 50.00 Hz
+
+Contracción 112: Frecuencia media = 35.89 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 113: Frecuencia media = 37.53 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 114: Frecuencia media = 41.07 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 115: Frecuencia media = 37.29 Hz, Frecuencia mediana = 25.00 Hz
+
+Contracción 116: Frecuencia media = 38.39 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 117: Frecuencia media = 41.88 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 118: Frecuencia media = 49.22 Hz, Frecuencia mediana = 50.00 Hz
+
+Contracción 119: Frecuencia media = 45.64 Hz, Frecuencia mediana = 50.00 Hz
+
+Contracción 120: Frecuencia media = 36.53 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 121: Frecuencia media = 36.89 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 122: Frecuencia media = 37.57 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 123: Frecuencia media = 51.82 Hz, Frecuencia mediana = 50.00 Hz
+
+Contracción 124: Frecuencia media = 42.56 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 125: Frecuencia media = 35.76 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 126: Frecuencia media = 37.23 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 127: Frecuencia media = 50.24 Hz, Frecuencia mediana = 50.00 Hz
+
+Contracción 128: Frecuencia media = 41.66 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 129: Frecuencia media = 32.68 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 130: Frecuencia media = 41.34 Hz, Frecuencia mediana = 50.00 Hz
+
+Contracción 131: Frecuencia media = 35.15 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 132: Frecuencia media = 40.15 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 133: Frecuencia media = 40.02 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 134: Frecuencia media = 40.48 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 135: Frecuencia media = 33.78 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 136: Frecuencia media = 39.21 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 137: Frecuencia media = 39.79 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 138: Frecuencia media = 41.46 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 139: Frecuencia media = 50.24 Hz, Frecuencia mediana = 50.00 Hz
+
+Contracción 140: Frecuencia media = 31.92 Hz, Frecuencia mediana = 25.00 Hz
+
+Contracción 141: Frecuencia media = 37.04 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 142: Frecuencia media = 42.10 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 143: Frecuencia media = 52.31 Hz, Frecuencia mediana = 50.00 Hz
+
+Contracción 144: Frecuencia media = 42.48 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 145: Frecuencia media = 37.01 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 146: Frecuencia media = 43.02 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 147: Frecuencia media = 36.03 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 148: Frecuencia media = 32.63 Hz, Frecuencia mediana = 25.00 Hz
+
+Contracción 149: Frecuencia media = 33.22 Hz, Frecuencia mediana = 25.00 Hz
+
+Contracción 150: Frecuencia media = 39.89 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 151: Frecuencia media = 40.66 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 152: Frecuencia media = 46.25 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 153: Frecuencia media = 40.33 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 154: Frecuencia media = 39.79 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 155: Frecuencia media = 36.41 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 156: Frecuencia media = 35.08 Hz, Frecuencia mediana = 25.00 Hz
+
+Contracción 157: Frecuencia media = 31.64 Hz, Frecuencia mediana = 25.00 Hz
+
+Contracción 158: Frecuencia media = 38.28 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 159: Frecuencia media = 48.11 Hz, Frecuencia mediana = 50.00 Hz
+
+Contracción 160: Frecuencia media = 33.34 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 161: Frecuencia media = 37.22 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 162: Frecuencia media = 41.37 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 163: Frecuencia media = 33.56 Hz, Frecuencia mediana = 25.00 Hz
+
+Contracción 164: Frecuencia media = 35.72 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 165: Frecuencia media = 46.11 Hz, Frecuencia mediana = 50.00 Hz
+
+Contracción 166: Frecuencia media = 45.08 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 167: Frecuencia media = 38.37 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 168: Frecuencia media = 42.66 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 169: Frecuencia media = 36.08 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 170: Frecuencia media = 38.23 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 171: Frecuencia media = 39.40 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 172: Frecuencia media = 40.38 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 173: Frecuencia media = 39.89 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 174: Frecuencia media = 34.27 Hz, Frecuencia mediana = 37.50 Hz
+
+Contracción 175: Frecuencia media = 42.65 Hz, Frecuencia mediana = 37.50 Hz
+
 ## **Gráfica de la señal EMG con frecuencia media y mediana**
 <img width="881" height="456" alt="image" src="https://github.com/user-attachments/assets/18fae2ff-c06c-4053-967d-6b36c8b99240" />
 
-## **Resultados**
-
-## **Análisis de la variación de las frecuencias a lo largo de las contracciones**
+## **Análisis de la tendencia de la frecuencia media y mediana a medida que progresa la fatiga muscular:**
 
 
+## **Relación entre los cambios de frecuencia y la fisiología de la fatiga muscular:**
+
+
+# **Parte C**
+
+## **Código en Python (Google colab)**
+<pre> ```
+# Transformada rapida de Fourier (FFT) aplicada a las tres primeras contracciones y a las tres ultimas contracciones
+# Duración de cada ventana de contracción
+ventana = 0.08  # segundos (80 ms)
+muestras_ventana = int(ventana * fs / 2)  # mitad antes y mitad después
+
+# FFT para cada contracción
+for i, p in enumerate(peaks):
+ini = max(0, p - muestras_ventana)
+fin = min(len(voltaje_filt), p + muestras_ventana)
+segmento = voltaje_filt[ini:fin]
+  
+# Aplicar FFT 
+N = len(segmento)
+fft_vals = np.fft.fft(segmento)
+fft_freqs = np.fft.fftfreq(N, d=1/fs)
+
+# Tomar solo la mitad positiva del espectro
+pos_mask = fft_freqs > 0
+fft_freqs = fft_freqs[pos_mask]
+fft_magnitude = np.abs(fft_vals[pos_mask]) * 2 / N  # normalizado
+
+# Graficar espectro de las tres primeras y ultimas contracciones
+plt.figure(figsize=(8,4))
+plt.plot(fft_freqs, fft_magnitude, color='orange')
+plt.title(f"FFT de la Contracción {i+1}")
+plt.xlabel("Frecuencia [Hz]")
+plt.ylabel("Magnitud (uV)")
+plt.xlim(0, 500)  # límite típico para EMG
+plt.grid(True)
+plt.show()
+```
+</pre>
+## **Diagrama de flujo**
+
+## **Gráficas del espectro de las tres primeras y ultimas contracciones**
+## *Contracción 1:*
+<img width="791" height="433" alt="image" src="https://github.com/user-attachments/assets/0f8f3f68-b9e7-4941-8373-f3297a9cff1f" />
+
+## *Contracción 2:*
+<img width="789" height="436" alt="image" src="https://github.com/user-attachments/assets/2983dd63-d5a4-46ba-bbe0-77d2fb6d7023" />
+
+## *Contracción 3:*
+<img width="802" height="433" alt="image" src="https://github.com/user-attachments/assets/6a187e61-a560-4d23-a062-fb866c825fc6" />
+
+## *Contracción 173:*
+<img width="789" height="429" alt="image" src="https://github.com/user-attachments/assets/d9e31955-1143-4376-9925-c8824410f69b" />
+
+## *Contracción 174:*
+<img width="794" height="433" alt="image" src="https://github.com/user-attachments/assets/47cb341c-70cd-4b47-977f-cc141aae848b" />
+
+## *Contracción 175:*
+<img width="789" height="438" alt="image" src="https://github.com/user-attachments/assets/b394e71e-043b-4936-9375-abb7bb55384d" />
+
+## **Código en Python (Google colab)**
+<pre> ```
+# Espectro de amplitud
+# FFT y espectro por contracción
+plt.figure(figsize=(10,6))
+
+for i, p in enumerate(peaks):
+ini = max(0, p - muestras_ventana)
+fin = min(len(voltaje_filt), p + muestras_ventana)
+segmento = voltaje_filt[ini:fin]
+
+if len(segmento) < 10:
+continue
+
+# Transformada Rápida de Fourier 
+N = len(segmento)
+fft_vals = np.fft.fft(segmento)
+fft_freqs = np.fft.fftfreq(N, d=1/fs)
+
+# Tomar solo parte positiva del espectro
+pos_mask = fft_freqs > 0
+freqs = fft_freqs[pos_mask]
+magnitude = np.abs(fft_vals[pos_mask]) * 2 / N  # normalizado
+
+# Graficar espectro 
+plt.plot(freqs, magnitude, label=f'Contracción {i+1}', alpha=0.7)
+plt.title("Espectro de Amplitud de las Contracciones EMG")
+plt.xlabel("Frecuencia [Hz]")
+plt.ylabel("Magnitud (uV)")
+plt.xlim(0, 500)  # rango típico para EMG
+plt.legend()
+plt.grid(True)
+plt.show()
+```
+</pre>
+
+## **Gráfica del espectro de amplitud de las contracciones**
+<img width="965" height="709" alt="image" src="https://github.com/user-attachments/assets/0433b6a6-75c0-43e6-9e8e-c82fb299f78e" />
+
+## **Código en Python (Google colab)**
+<pre> ```
+# Comparacion del espectro de las primeras y ultimas contracciones
+
+  ```
+</pre>
 
