@@ -4,7 +4,7 @@
 
 **Asignatura:** Procesamiento Digital de Señales
 
-**Estudiantes:** Dubrasca Martinez, Mariana Leyton, Maria Fernanda Castellanos
+**Estudiantes:** Dubrasca Martínez, Mariana Leyton, Maria Fernanda Castellanos
 
 **Fecha:** 26 de Octubre del 2025
 
