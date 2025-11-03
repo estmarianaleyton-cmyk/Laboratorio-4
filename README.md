@@ -87,6 +87,9 @@ plt.show()
 </pre>
 ## **Diagrama de flujo**
 
+<img width="1760" height="1360" alt="_Diagrama de flujo -  Diagrama de flujo (1)" src="https://github.com/user-attachments/assets/9fc917b9-27a4-42ef-bb44-06eda5744f2a" />
+
+
 ## **Señal segmentada (5 contracciones simuladas)**
 <img width="963" height="613" alt="image" src="https://github.com/user-attachments/assets/16a4eb6c-d626-49ef-8757-5955661974bb" />
 
@@ -156,6 +159,7 @@ plt.show()
   ```
 </pre>
 ## **Diagrama de flujo**
+<img width="1760" height="1360" alt="_Diagrama de flujo - Página 2 (1)" src="https://github.com/user-attachments/assets/eacc2a92-ea66-4929-8b95-d87931796efd" />
 
 ## **Resultados de frecuencias por contración:**
 <img width="519" height="121" alt="image" src="https://github.com/user-attachments/assets/7163de94-881d-41a0-b8f8-8f43a9802630" />
