@@ -663,10 +663,12 @@ Contracción 175: Frecuencia media = 42.65 Hz, Frecuencia mediana = 37.50 Hz
 <img width="881" height="456" alt="image" src="https://github.com/user-attachments/assets/18fae2ff-c06c-4053-967d-6b36c8b99240" />
 
 ## **Análisis de la tendencia de la frecuencia media y mediana a medida que progresa la fatiga muscular:**
-
+A medida que el músculo se va fatigando tanto la frecuencia media como la frecuencia mediana muestran una tendencia a disminuir. Al comienzo las contracciones presentan frecuencias más altas, lo que refleja una buena respuesta y activación muscular. Sin embargo, conforme avanza el esfuerzo y el músculo empieza a agotarse ambas frecuencias bajan progresivamente.
+Esto ocurre porque las fibras musculares pierden capacidad de conducción eléctrica y el contenido de altas frecuencias se reduce, es decir, la señal EMG se “ralentiza” con la fatiga, mostrando cómo el músculo va perdiendo fuerza y eficiencia con cada contracción.
 
 ## **Relación entre los cambios de frecuencia y la fisiología de la fatiga muscular:**
-
+La variación en las frecuencias de la señal EMG está directamente relacionada con los procesos fisiológicos que ocurren durante la fatiga muscular. Cuando el músculo se fatiga disminuye la velocidad de conducción de los potenciales de acción en las fibras musculares debido a la acumulación de metabolitos como el ácido láctico y a la reducción de la excitabilidad de la membrana.
+Estos cambios fisiológicos provocan que las señales eléctricas generadas tengan menor contenido en altas frecuencias, desplazando el espectro hacia valores más bajos. Por tanto, la reducción de la frecuencia media y mediana refleja el deterioro progresivo en la capacidad del músculo para generar contracciones fuertes y coordinadas, siendo un indicador claro del inicio y evolución de la fatiga.
 
 # **Parte C**
 
