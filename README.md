@@ -255,6 +255,7 @@ plt.show()
   ´´´
 </pre>
 ## **Diagrama de flujo**
+<img width="1760" height="1360" alt="_Diagrama de flujo - Página 2 (2)" src="https://github.com/user-attachments/assets/dc0cb818-615e-401c-9aad-e0d31bc26e10" />
 
 ## **Gráfica de la señal EMG tomada en el laboratorio con filtro pasa banda**
 <img width="1219" height="306" alt="image" src="https://github.com/user-attachments/assets/00db37fc-35c6-4591-9cba-7c5cf6a5da18" />
@@ -306,6 +307,7 @@ plt.show()
   ´´´
 </pre>
 ## **Diagrama de flujo**
+<img width="1760" height="1360" alt="_Diagrama de flujo - Página 2 (3)" src="https://github.com/user-attachments/assets/d4c613bb-b7e8-421d-ba0a-212c45ad6b3d" />
 
 ## **Resultados**
 
@@ -703,6 +705,7 @@ plt.show()
 ```
 </pre>
 ## **Diagrama de flujo**
+<img width="1760" height="1360" alt="_Diagrama de flujo -  Diagrama de flujo (2)" src="https://github.com/user-attachments/assets/79dd2a00-7666-4c28-bc44-f496f31fe379" />
 
 ## **Gráficas del espectro de las tres primeras y ultimas contracciones**
 ## *Contracción 1:*
