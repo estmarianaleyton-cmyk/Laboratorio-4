@@ -878,6 +878,9 @@ print(f"Desplazamiento hacia bajas frecuencias: {descenso:.2f}%")
 
 ## **Desplazamiento del pico espectral en contracciones sucesivas**
 <img width="841" height="547" alt="download" src="https://github.com/user-attachments/assets/3f02795b-89c1-411f-9d57-fb9991770f2e" />
+
+
 ## **Análisis espectral como herramienta diagnóstica en electromiografía**
+El análisis espectral en electromiografía se da como una herramienta diagnóstica eficaz para evaluar la función muscular y detectar alteraciones neuromusculares mediante el estudio de la distribución de frecuencias de la señal EMG. Su aplicación permite identificar fenómenos como la fatiga muscular, cambios en la conducción de las fibras y variaciones en la activación de las unidades motoras, proporcionando información cuantitativa y objetiva complementaria al análisis temporal. No obstante, su precisión depende de una adecuada adquisición y procesamiento de la señal, ya que el ruido y los artefactos pueden alterar los resultados. El análisis espectral ofrece un medio no invasivo, sensible  para el diagnóstico, la rehabilitación y el monitoreo del rendimiento muscular
 
 
