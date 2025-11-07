@@ -878,8 +878,61 @@ print(f"Desplazamiento hacia bajas frecuencias: {descenso:.2f}%")
 
 ## **Desplazamiento del pico espectral en contracciones sucesivas**
 <img width="841" height="547" alt="download" src="https://github.com/user-attachments/assets/3f02795b-89c1-411f-9d57-fb9991770f2e" />
+## **Primeras e ultimas contracciones, y reduccion de alto contenido de altas frecuencias asociada a la fatiga**
+<pre> ```
+  import numpy as np
+import matplotlib.pyplot as plt
 
 
+duracion_contraccion = 0.7
+ventana = int(duracion_contraccion * fs / 2)
+
+
+primeras = peaks[:5]
+ultimas = peaks[-5:]
+
+def calcular_fft(segmento, fs):
+    N = len(segmento)
+    fft_seg = np.fft.fft(segmento)
+    freqs = np.fft.fftfreq(N, 1/fs)
+    idx = np.where(freqs >= 0)
+    freqs = freqs[idx]
+    amplitud = np.abs(fft_seg[idx]) / N
+    return freqs, amplitud
+
+def promedio_fft(indices):
+    espectros = []
+    for p in indices:
+        ini = max(p - ventana, 0)
+        fin = min(p + ventana, len(senal_filtrada))
+        seg = senal_filtrada[ini:fin]
+        f, a = calcular_fft(seg, fs)
+        espectros.append(a)
+    espectros = np.mean(espectros, axis=0)
+    return f, espectros
+
+f1, spec_primeras = promedio_fft(primeras)
+f2, spec_ultimas = promedio_fft(ultimas)
+
+
+plt.figure(figsize=(10,5))
+plt.plot(f1, spec_primeras, label='Primeras contracciones', color='blue')
+plt.plot(f2, spec_ultimas, label='Últimas contracciones', color='red')
+plt.title('Comparación de espectros: primeras vs últimas contracciones')
+plt.xlabel('Frecuencia [Hz]')
+plt.ylabel('Amplitud normalizada')
+plt.xlim(0, 500)
+plt.legend()
+plt.grid(True)
+plt.show()
+
+    
+  ```
+</pre>
+
+<img width="876" height="471" alt="download" src="https://github.com/user-attachments/assets/5c8a9400-2449-4a5c-ae8f-edfaccaefa91" />
+
+  
 ## **Análisis espectral como herramienta diagnóstica en electromiografía**
 El análisis espectral en electromiografía se da como una herramienta diagnóstica eficaz para evaluar la función muscular y detectar alteraciones neuromusculares mediante el estudio de la distribución de frecuencias de la señal EMG. Su aplicación permite identificar fenómenos como la fatiga muscular, cambios en la conducción de las fibras y variaciones en la activación de las unidades motoras, proporcionando información cuantitativa y objetiva complementaria al análisis temporal. No obstante, su precisión depende de una adecuada adquisición y procesamiento de la señal, ya que el ruido y los artefactos pueden alterar los resultados. El análisis espectral ofrece un medio no invasivo, sensible  para el diagnóstico, la rehabilitación y el monitoreo del rendimiento muscular
 
