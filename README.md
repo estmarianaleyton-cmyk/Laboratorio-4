@@ -925,10 +925,10 @@ plt.xlim(0, 500)
 plt.legend()
 plt.grid(True)
 plt.show()
-
-    
-  ```
+    ```
 </pre>
+
+
 ## **primeras vs contracciones sucesivas**
 
 <img width="876" height="471" alt="download" src="https://github.com/user-attachments/assets/5c8a9400-2449-4a5c-ae8f-edfaccaefa91" />
