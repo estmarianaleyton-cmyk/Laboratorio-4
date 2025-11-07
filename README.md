@@ -824,6 +824,60 @@ print(f"Reducción del contenido de alta frecuencia: {reduccion:.2f}%")
 ## **Gráfica de comparación de espectros**
 <img width="964" height="614" alt="image" src="https://github.com/user-attachments/assets/8932ed0a-0b6a-436a-9fca-5268ff0d1194" />
 
+## **Código en Python (Google colab)**
+<pre> ```
+  # --- Parámetros de ventana para cada contracción ---
+ventana = 0.08  # segundos (80 ms)
+muestras_ventana = int(ventana * fs / 2)
 
+# --- Lista para guardar las frecuencias del pico espectral ---
+pico_frecuencias = []
+
+for i, p in enumerate(peaks):
+    ini = max(0, p - muestras_ventana)
+    fin = min(len(voltaje_filt), p + muestras_ventana)
+    segmento = voltaje_filt[ini:fin]
+
+    if len(segmento) < 10:
+        continue
+
+    # --- FFT del segmento ---
+    N = len(segmento)
+    fft_vals = np.fft.fft(segmento)
+    fft_freqs = np.fft.fftfreq(N, d=1/fs)
+    pos_mask = fft_freqs > 0
+    freqs = fft_freqs[pos_mask]
+    mag = np.abs(fft_vals[pos_mask]) * 2 / N
+
+    # --- Encontrar frecuencia del pico máximo ---
+    freq_pico = freqs[np.argmax(mag)]
+    pico_frecuencias.append(freq_pico)
+
+# --- Crear eje temporal o índice de contracción ---
+contraccion_idx = np.arange(1, len(pico_frecuencias) + 1)
+
+# --- Graficar evolución del pico espectral ---
+plt.figure(figsize=(10,6))
+plt.plot(contraccion_idx, pico_frecuencias, 'o-', color='purple')
+plt.title("Desplazamiento del pico espectral durante contracciones sucesivas")
+plt.xlabel("Número de contracción")
+plt.ylabel("Frecuencia del pico espectral [Hz]")
+plt.grid(True)
+plt.show()
+
+# --- Estadísticas ---
+f_ini = pico_frecuencias[0]
+f_fin = pico_frecuencias[-1]
+descenso = ((f_ini - f_fin) / f_ini) * 100
+print(f"Frecuencia pico inicial: {f_ini:.1f} Hz")
+print(f"Frecuencia pico final: {f_fin:.1f} Hz")
+print(f"Desplazamiento hacia bajas frecuencias: {descenso:.2f}%")
+  
+  ```
+</pre>
+
+## **Desplazamiento del pico espectral en contracciones sucesivas**
+<img width="841" height="547" alt="download" src="https://github.com/user-attachments/assets/3f02795b-89c1-411f-9d57-fb9991770f2e" />
+## **Análisis espectral como herramienta diagnóstica en electromiografía**
 
 
